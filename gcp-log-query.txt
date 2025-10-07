@@ -1,0 +1,5 @@
+(resource.type = "cloud_run_revision" OR resource.type = "cloud_function")
+AND NOT (
+  resource.labels.function_name = "mezmoForwarder"
+  OR resource.labels.service_name = "mezmoForwarder"
+)

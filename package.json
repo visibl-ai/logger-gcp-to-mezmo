@@ -1,0 +1,6 @@
+{
+  "name": "logger-gcp-to-mezmo",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js"
+}
