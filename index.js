@@ -48,9 +48,16 @@ function pickApp(entry) {
 
 function pickLine(entry) {
   if (entry.textPayload) return String(entry.textPayload);
-  if (entry.jsonPayload) return JSON.stringify(entry.jsonPayload);
-  if (entry.protoPayload) return JSON.stringify(entry.protoPayload);
-  return JSON.stringify(entry);
+  if (entry.jsonPayload) {
+    const str = JSON.stringify(entry.jsonPayload);
+    return str.length > 50 ? str.substring(0, 50) + '...' : str;
+  }
+  if (entry.protoPayload) {
+    const str = JSON.stringify(entry.protoPayload);
+    return str.length > 50 ? str.substring(0, 50) + '...' : str;
+  }
+  const str = JSON.stringify(entry);
+  return str.length > 50 ? str.substring(0, 50) + '...' : str;
 }
 
 function gcpLogToLine(entry) {
