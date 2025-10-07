@@ -5,6 +5,30 @@ const MEZMO_URL = process.env.MEZMO_URL || "https://logs.logdna.com/logs/ingest"
 const MEZMO_KEY = process.env.MEZMO_KEY; // Ingestion key (Basic Auth)
 
 // --- helpers ---
+function redactApiKeys(obj) {
+  try {
+    if (!obj || typeof obj !== 'object') return obj;
+
+    if (Array.isArray(obj)) {
+      return obj.map(item => redactApiKeys(item));
+    }
+
+    const redacted = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (key.endsWith('API_KEY')) {
+        redacted[key] = '[REDACTED]';
+      } else if (typeof value === 'object' && value !== null) {
+        redacted[key] = redactApiKeys(value);
+      } else {
+        redacted[key] = value;
+      }
+    }
+    return redacted;
+  } catch {
+    return obj;
+  }
+}
+
 function toMillis(ts) {
   try {
     return ts ? Date.parse(ts) || Date.now() : Date.now();
@@ -30,13 +54,14 @@ function pickLine(entry) {
 }
 
 function gcpLogToLine(entry) {
+  const redacted = redactApiKeys(entry);
   return {
-    timestamp: toMillis(entry.timestamp || entry.receiveTimestamp),
-    level: entry.severity || "INFO",
-    app: pickApp(entry),
-    line: pickLine(entry),
+    timestamp: toMillis(redacted.timestamp || redacted.receiveTimestamp),
+    level: redacted.severity || "INFO",
+    app: pickApp(redacted),
+    line: pickLine(redacted),
     meta: {
-      gcp: entry, // keep original structure exactly as-is
+      gcp: redacted, // keep original structure with API keys redacted
     },
   };
 }

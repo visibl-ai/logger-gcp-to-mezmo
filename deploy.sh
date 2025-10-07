@@ -40,7 +40,7 @@ fi
 REGION="europe-west1"
 TOPIC="logs-to-mezmo"
 FUNCTION_NAME="mezmoForwarder"
-MEZMO_URL="https://logs.logdna.com/logs/ingest?hostname=gcp"
+MEZMO_URL="https://logs.logdna.com/logs/ingest?hostname=dev"
 
 echo "✅ Using project: $PROJECT_ID"
 echo "✅ Using region:  $REGION"
