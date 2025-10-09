@@ -60,6 +60,9 @@ gcloud functions deploy "$FUNCTION_NAME" \
   --trigger-topic "$TOPIC" \
   --set-env-vars "MEZMO_KEY=$MEZMO_API_KEY,MEZMO_URL=$MEZMO_URL" \
   --memory=256Mi \
-  --timeout=60s
+  --cpu=1 \
+  --timeout=60s \
+  --max-instances=2 \
+  --concurrency=80
 
 echo "✅ Deployment complete (if no errors were printed)."
